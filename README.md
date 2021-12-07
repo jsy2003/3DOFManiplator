@@ -150,5 +150,29 @@
 ```
 
 [controller.yaml]
+```
+    three_dof_plannar_manipulator:
+        #publish all joint states
+        joint_update:
+            type:joint_state_controller/JointStateController
+            publish_rate:50
+        
+        #position controller
+        joint1:
+            type:position_controller/JointPositionController
+            joint:joint1
+            pid:{p:1.0, i:1.0, d:0.0}
+            
+        joint2:
+            type:position_controller/JointPositionController
+            joint:joint2
+            pid:{p:1.0, i:1.0, d:0.0}
+            
+        joint3:
+            type:position_controller/JointPositionController
+            joint:joint3
+            pid:{p:1.0, i:1.0, d:0.0}
+```
+
 
 
