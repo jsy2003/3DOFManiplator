@@ -176,22 +176,136 @@
 
 [service file ] - [Floats_array.srv]
 ```
+    float32 req
+    ---
+    float32[] res
 ```
+
 
 [CMakeList.txt file]
 ```
+    find_package(catkin REQUIRED COMPONENTS
+        actionlib
+        control_msgs
+        controller_manager
+        roscpp
+        rospy
+        std_msgs
+        std_srvs
+        trajectory_msgs
+        visualization_msgs
+        message_generation
+    )
+
+    ## Generate services in the 'srv' folder
+    add_service_files(
+        FILES
+        Floats_array.srv
+        #   Service2.srv
+    )
+
+    ## Generate added messages and services with any dependencies listed here
+    generate_messages(
+        DEPENDENCIES
+        std_msgs #   control_msgs#     trajectory_msgs#   visualization_msgs
+    )
+
+    ## Specify additional locations of header files
+    ## Your package locations should be listed before other locations
+    include_directories(
+        include
+        ${catkin_INCLUDE_DIRS}
+        ${Boost_INCLUDE_DIRS}
+    )
+
+    add_executable(robot_hardware_interface src/robot_hardware_interface_node.cpp)
+    target_link_libraries(robot_hardware_interface ${catkin_LIBRARIES})
 ```
 
 [package.xml file]
 ```
+    <buildtool_depend>catkin</buildtool_depend>
+    <build_depend>actionlib</build_depend>
+    <build_depend>control_msgs</build_depend>
+    <build_depend>controller_manager</build_depend>
+    <build_depend>roscpp</build_depend>
+    <build_depend>rospy</build_depend>
+    <build_depend>std_msgs</build_depend>
+    <build_depend>std_srvs</build_depend>
+    <build_depend>trajectory_msgs</build_depend>
+    <build_depend>visualization_msgs</build_depend>
+    <build_depend>message_generation</build_depend>
+  
+    <build_export_depend>actionlib</build_export_depend>
+    <build_export_depend>control_msgs</build_export_depend>
+    <build_export_depend>controller_manager</build_export_depend>
+    <build_export_depend>roscpp</build_export_depend>
+    <build_export_depend>rospy</build_export_depend>
+    <build_export_depend>std_msgs</build_export_depend>
+    <build_export_depend>std_srvs</build_export_depend>
+    <build_export_depend>trajectory_msgs</build_export_depend>
+    <build_export_depend>visualization_msgs</build_export_depend>
+  
+    <exec_depend>actionlib</exec_depend>
+    <exec_depend>control_msgs</exec_depend>
+    <exec_depend>controller_manager</exec_depend>
+    <exec_depend>roscpp</exec_depend>
+    <exec_depend>rospy</exec_depend>
+    <exec_depend>std_msgs</exec_depend>
+    <exec_depend>std_srvs</exec_depend>
+    <exec_depend>trajectory_msgs</exec_depend>
+    <exec_depend>visualization_msgs</exec_depend>
+    <exec_depend>message_runtime</exec_depend>
 ```
 
 [launch file] - [check_urdf.launch]
 ```
+    <?xml version="1.0"?>
+    <launch>
+
+        <arg name="model" default="$(find three_dof_planar_manipulator)/urdf/three_dof_planar_manipulator.urdf.xacro"/>
+        <arg name="gui" default="true" />
+        
+        <param name="robot_description" command="$(find xacro)/xacro.py $(arg model)" />
+        <param name="use_gui" value="$(arg gui)"/>
+        
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" >
+        </node>
+
+        <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+  
+        <node name="rviz" pkg="rviz" type="rviz"/> 
+     </launch>
 ```
 
 [launch file] - [check_motor_control.launch]
 ```
+    <?xml version="1.0"?>
+    <launch>
+    
+        <rosparam file="$(find three_dof_planar_manipulator)/config/controllers.yaml" command="load"/>
+   
+        <arg name="model" default="$(find three_dof_planar_manipulator)/urdf/three_dof_planar_manipulator.urdf.xacro"/>
+        <arg name="gui" default="true" />
+  
+        <param name="robot_description" command="$(find xacro)/xacro.py $(arg model)" />
+        <param name="use_gui" value="$(arg gui)"/>
+
+        <node name="robot_hardware_interface" pkg="three_dof_planar_manipulator" type="robot_hardware_interface" output="screen"/>
+
+        <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" >
+        </node>
+  
+        <node name="rviz" pkg="rviz" type="rviz"/>
+    
+        <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+            args="
+        	    /three_dof_planar_manipulator/joints_update
+                /three_dof_planar_manipulator/joint1
+                /three_dof_planar_manipulator/joint2
+                /three_dof_planar_manipulator/joint3
+            "/>
+    </launch>
 ```
 
 [Vision file]
