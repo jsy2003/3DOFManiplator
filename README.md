@@ -308,6 +308,10 @@
     </launch>
 ```
 
+[scripts file] - [motion file] - [ik_marker.py]
+```
+```
+
 [scripts file] - [Vision file] - [color_threaholding.py]
 ```
 ```
@@ -317,9 +321,7 @@
 [scripts file] - [motion file] - [execute_motion.py]
 ```
 ```
-[scripts file] - [motion file] - [ik_marker.py]
-```
-```
+
 
 
 
