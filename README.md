@@ -310,6 +310,37 @@
 
 [scripts file] - [motion file] - [ik_marker.py]
 ```
+    #!/usr/bin/env python
+    
+    import rospy
+    import tf
+    import copy
+    
+    import moveit_commander
+    import moveit_msgs.msg
+    import geometry_msgs.msg
+    from math import pi
+    from std_msgs.msg import string
+    from moveit_commander.conversions import pose_to_list
+    from geometry_msgs.msg import Pose
+    
+    from interactive_markers.interactive_marker_server import *
+    from interactive_markers.menu_handler import *
+    from visualization_msgs.msg import *
+    from gemoetry_msgs.msg import Pose
+    
+    viapoints=[]
+    viapoints_marker = MakerArray()
+    count=0
+    
+    if __name__=="__main__":
+        rospy.init_node("simple_marker")
+        init_marker = InteractiveMarker()
+        menu_handler = MenuHandler()
+        
+    
+    
+    
 ```
 
 [scripts file] - [Vision file] - [color_threaholding.py]
